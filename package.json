@@ -1,0 +1,42 @@
+{
+  "name": "@axiomhq/cloudflare",
+  "version": "0.0.1",
+  "description": "send logs form cloudflare to axiom",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Axiom, Inc.",
+  "scripts": {
+    "build": "tsc",
+    "format": "eslint '*/**/*.{js,ts}' --quiet --fix",
+    "lint": "eslint '*/**/*.{js,ts}'"
+  },
+  "contributors": [
+    "Islam Schehata <islam@axiom.co>",
+    "Arne Bahlo <arne@axiom.co>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axiomhq/cloudflare.git"
+  },
+  "keywords": [
+    "axiom",
+    "cloudflare"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/axiomhq/cloudflare/issues"
+  },
+  "homepage": "https://github.com/axiomhq/cloudflare#readme",
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "prettier": "^2.8.3",
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
