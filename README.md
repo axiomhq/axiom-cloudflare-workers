@@ -6,9 +6,9 @@ send logs from cloudflare to axiom
 
 ## Usage
 
-- Copy the contents of `src/worker.ts` into a new worker on cloudflare.
+- Copy the contents of `dist/worker.js` into a new worker on cloudflare.
 
-- Update the first two variables to corresponding dataset and token:
+- Update the authentication variables to corresponding dataset and token:
 
 ```ts
 const axiomDataset = "my-dataset" // Your Axiom dataset

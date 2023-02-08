@@ -2,8 +2,8 @@
   "name": "@axiomhq/cloudflare",
   "version": "0.0.1",
   "description": "send logs form cloudflare to axiom",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/worker.js",
+  "types": "dist/worker.d.ts",
   "author": "Axiom, Inc.",
   "scripts": {
     "build": "tsc",
