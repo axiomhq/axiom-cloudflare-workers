@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const axiomDataset = "my-dataset"; // Your Axiom dataset
 const axiomToken = "xapt-xxx"; // Your Axiom API token
 // 8< ----------- snip ------------
+const Version = require('../package.json').version;
 const axiomEndpoint = "https://api.axiom.co";
 let workerTimestamp;
 let batch = [];
@@ -62,10 +63,12 @@ function sendLogs() {
         const url = `${axiomEndpoint}/v1/datasets/${axiomDataset}/ingest`;
         return fetch(url, {
             method: "POST",
+            keepalive: true,
             body: logs.map(l => JSON.stringify(l)).join("\n"),
             headers: {
                 "Content-Type": "application/x-ndjson",
                 Authorization: `Bearer ${axiomToken}`,
+                "User-Agent": 'axiom-cloudflare/' + Version,
             },
         });
     });

@@ -1,5 +1,6 @@
 declare const axiomDataset = "my-dataset";
 declare const axiomToken = "xapt-xxx";
+declare const Version: any;
 declare const axiomEndpoint = "https://api.axiom.co";
 declare let workerTimestamp: any;
 declare let batch: LogEvent[];
