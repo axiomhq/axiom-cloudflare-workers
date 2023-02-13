@@ -2,7 +2,7 @@ const axiomDataset = "my-dataset" // Your Axiom dataset
 const axiomToken = "xapt-xxx" // Your Axiom API token
 
 // 8< ----------- snip ------------
-
+const Version = require('../package.json').version;
 const axiomEndpoint = "https://api.axiom.co"
 let workerTimestamp: any
 let batch: LogEvent[] = []
@@ -59,10 +59,12 @@ async function sendLogs() {
   const url = `${axiomEndpoint}/v1/datasets/${axiomDataset}/ingest`
   return fetch(url, {
     method: "POST",
+    keepalive: true,
     body: logs.map(l => JSON.stringify(l)).join("\n"),
     headers: {
       "Content-Type": "application/x-ndjson",
       Authorization: `Bearer ${axiomToken}`,
+      "User-Agent": 'axiom-cloudflare/' + Version,
     },
   })
 }
