@@ -2,11 +2,9 @@
   "name": "@axiomhq/cloudflare",
   "version": "0.1.0",
   "description": "send logs form cloudflare to axiom",
-  "main": "dist/worker.js",
-  "types": "dist/worker.d.ts",
+  "main": "src/worker.js",
   "author": "Axiom, Inc.",
   "scripts": {
-    "build": "tsc",
     "format": "eslint '*/**/*.{js,ts}' --quiet --fix",
     "lint": "eslint '*/**/*.{js,ts}'"
   },
@@ -28,13 +26,9 @@
   },
   "homepage": "https://github.com/axiomhq/cloudflare#readme",
   "devDependencies": {
-    "@types/node": "^18.13.0",
-    "@typescript-eslint/eslint-plugin": "^5.51.0",
-    "@typescript-eslint/parser": "^5.51.0",
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
-    "prettier": "^2.8.3",
-    "typescript": "^4.9.5"
+    "prettier": "^2.8.3"
   },
   "engines": {
     "node": ">=14"
