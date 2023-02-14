@@ -2,7 +2,7 @@ const axiomDataset = "my-dataset" // Your Axiom dataset
 const axiomToken = "xapt-xxx" // Your Axiom API token
 
 // 8< ----------- snip ------------
-const Version = require('../package.json').version;
+const Version = "0.1.0";
 const axiomEndpoint = "https://api.axiom.co"
 let workerTimestamp: any
 let batch: LogEvent[] = []

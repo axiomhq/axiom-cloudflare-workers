@@ -1,6 +1,6 @@
 {
   "name": "@axiomhq/cloudflare",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "send logs form cloudflare to axiom",
   "main": "dist/worker.js",
   "types": "dist/worker.d.ts",
