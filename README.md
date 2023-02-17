@@ -14,3 +14,14 @@ send logs from cloudflare to axiom
 const axiomDataset = "my-dataset" // Your Axiom dataset
 const axiomToken = "xapt-xxx" // Your Axiom API token
 ```
+
+Add triggers for the worker, e.g a route trigger:
+
+- Navigate to the worker and click on the `Triggers` tab.
+
+- Scroll down to Routes and click `Add Route`.
+
+- Enter a route, e.g `*.example.com` and choose the related zone, 
+  then click `Save`.
+
+When requests are made to the routes you setup, the worker will be triggered and you will see the logs delivered to your Axiom dataset.

@@ -1,29 +1,28 @@
-const axiomDataset = "my-dataset" // Your Axiom dataset
-const axiomToken = "xapt-xxx" // Your Axiom API token
+const axiomDataset = 'my-dataset' // Your Axiom dataset
+const axiomToken = 'xapt-xxx' // Your Axiom API token
 
 // 8< ----------- snip ------------
-const Version = "0.1.0";
-const axiomEndpoint = "https://api.axiom.co"
+const Version = '0.1.0'
+const axiomEndpoint = 'https://api.axiom.co'
 let workerTimestamp
 let batch = []
 
 const generateId = length => {
-  let text = ""
-  const possible = "abcdefghijklmnpqrstuvwxyz0123456789"
+  let text = ''
+  const possible = 'abcdefghijklmnpqrstuvwxyz0123456789'
   for (let i = 0; i < length; i += 1) {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   }
   return text
 }
 
-const CF_APP_VERSION = "0.1.0"
 const WORKER_ID = generateId(6)
 
 const throttle = (fn, wait, maxCalls) => {
   let lastFn
   let lastTime
   let callCount = 0
-  return function actual(...args) {
+  return function actual (...args) {
     const context = this
     callCount += 1
 
@@ -48,7 +47,7 @@ const throttle = (fn, wait, maxCalls) => {
   }
 }
 
-async function sendLogs() {
+async function sendLogs () {
   if (batch.length === 0) {
     return
   }
@@ -57,31 +56,31 @@ async function sendLogs() {
 
   const url = `${axiomEndpoint}/v1/datasets/${axiomDataset}/ingest`
   return fetch(url, {
-    method: "POST",
-    body: logs.map(JSON.stringify).join("\n"),
+    method: 'POST',
+    body: logs.map(JSON.stringify).join('\n'),
     keepalive: true,
     headers: {
-      "Content-Type": "application/x-ndjson",
+      'Content-Type': 'application/x-ndjson',
       Authorization: `Bearer ${axiomToken}`,
-      'User-Agent': 'axiom-cloudflare/' + Version,
-    },
+      'User-Agent': 'axiom-cloudflare/' + Version
+    }
   })
 }
 
 // This will send logs every second or every 1000 logs
 const throttledSendLogs = throttle(sendLogs, 1000, 1000)
 
-async function handleRequest(request, context) {
+async function handleRequest (request, context) {
   const start = Date.now()
 
   const response = await fetch(request)
   const duration = Date.now() - start
 
-  let cf = {}
+  const cf = {}
   if (request.cf) {
     // delete does not work so we copy into a new object
     Object.keys(request.cf).forEach(key => {
-      if (key !== "tlsClientAuth" && key !== "tlsExportedAuthenticator") {
+      if (key !== 'tlsClientAuth' && key !== 'tlsExportedAuthenticator') {
         cf[key] = request.cf[key]
       }
     })
@@ -98,13 +97,13 @@ async function handleRequest(request, context) {
     response: {
       duration,
       headers: response.headers,
-      status: response.status,
+      status: response.status
     },
     worker: {
-      version: CF_APP_VERSION,
+      version: Version,
       id: WORKER_ID,
-      started: workerTimestamp,
-    },
+      started: workerTimestamp
+    }
   })
 
   context.waitUntil(throttledSendLogs())
@@ -112,7 +111,7 @@ async function handleRequest(request, context) {
 }
 
 export default {
-  fetch(req, _, context) {
+  fetch (req, _, context) {
     context.passThroughOnException()
 
     if (!workerTimestamp) {
