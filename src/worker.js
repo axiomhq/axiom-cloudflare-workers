@@ -92,7 +92,7 @@ async function handleRequest (request, context) {
       url: request.url,
       headers: request.headers,
       method: request.method,
-      cf
+      ...cf
     },
     response: {
       duration,
