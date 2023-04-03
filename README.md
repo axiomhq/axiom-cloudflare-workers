@@ -1,6 +1,5 @@
-![axiom-cloudflare: Ingest logs and events from your Cloudflare workers](.github/workflows/images/banner-dark.svg#gh-dark-mode-only)
-![axiom-lambda-extension: Ingest logs and events from your Cloudflare workers](.github/workflows/images/banner-light.svg#gh-light-mode-only)
-
+![axiom-cloudflare: Send logs from Cloudflare Workers to Axiom](.github/images/banner-dark.svg#gh-dark-mode-only)
+![axiom-cloudflare: Send logs from Cloudflare Workers to Axiom](.github/images/banner-light.svg#gh-light-mode-only)
 
 [Axiom](https://axiom.co) unlocks observability at any scale.
 
@@ -19,31 +18,26 @@
 For more information, check out the [official documentation](https://axiom.co/docs)
 and our [community Discord](https://axiom.co/discord).
 
-
 ---
 
-The axiom-cloudflare script can ship worker logs from Cloudflare to Axiom.
+This worker script can send logs from Cloudflare to Axiom.
 
-:warning: this is the first iteration of this tool, it is not yet ready for production use.
+:warning: This is in still development and not ready for production use.
 
 ## Quickstart
 
-- Copy the contents of `src/worker.js` into a new worker on cloudflare.
+Copy the contents of `src/worker.js` into a new worker on cloudflare
 
-- Update the authentication variables to corresponding dataset and token:
-
+Update the authentication variables to corresponding dataset and token:
 ```ts
 const axiomDataset = "my-dataset" // Your Axiom dataset
 const axiomToken = "xapt-xxx" // Your Axiom API token
 ```
 
 Add triggers for the worker, e.g a route trigger:
-
-- Navigate to the worker and click on the `Triggers` tab.
-
-- Scroll down to Routes and click `Add Route`.
-
-- Enter a route, e.g `*.example.com` and choose the related zone, 
-  then click `Save`.
+  - Navigate to the worker and click on the `Triggers` tab.
+  - Scroll down to Routes and click `Add Route`.
+  - Enter a route, e.g `*.example.com` and choose the related zone, 
+    then click `Save`.
 
 When requests are made to the routes you setup, the worker will be triggered and you will see the logs delivered to your Axiom dataset.
