@@ -22,7 +22,7 @@ and our [community Discord](https://axiom.co/discord).
 
 This worker script can send logs from Cloudflare to Axiom.
 
-:warning: This is in still development and not ready for production use.
+:warning: This is still in development and not ready for production use.
 
 ## Quickstart
 
