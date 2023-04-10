@@ -106,7 +106,6 @@ async function handleRequest (request, context) {
     }
   })
 
-  context.waitUntil(throttledSendLogs())
   return response
 }
 
@@ -118,7 +117,7 @@ export default {
       workerTimestamp = new Date().toISOString()
     }
 
-    context.waitUntil(sendLogs())
+    context.waitUntil(throttledSendLogs())
     return handleRequest(req, context)
   }
 }
