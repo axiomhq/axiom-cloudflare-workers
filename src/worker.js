@@ -27,14 +27,12 @@ const throttle = (fn, wait, maxLen) => {
       await fn.apply(context, args)
     } else if (!timeoutInProgress) {
       timeoutInProgress = true
-      await new Promise(resolve => {
+      await new Promise((resolve, reject) => {
         setTimeout(() => {
           timeoutInProgress = false
-          fn.apply(context, args).then(() => {
-            resolve()
-          })
-        }, wait)
-      })
+          fn.apply(context, args).then(resolve).catch(resolve);
+        })
+      }, wait)
     }
   }
 }
