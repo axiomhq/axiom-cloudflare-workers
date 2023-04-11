@@ -2,7 +2,7 @@ const axiomDataset = 'my-dataset' // Your Axiom dataset
 const axiomToken = 'xapt-xxx' // Your Axiom API token
 
 // 8< ----------- snip ------------
-const Version = '0.1.0'
+const Version = '0.2.0'
 const axiomEndpoint = 'https://api.axiom.co'
 let workerTimestamp
 let batch = []
@@ -18,31 +18,31 @@ const generateId = length => {
 
 const WORKER_ID = generateId(6)
 
-const throttle = (fn, wait, maxCalls) => {
-  let lastFn
-  let lastTime
-  let callCount = 0
-  return function actual (...args) {
+const throttle = (fn, wait, maxLen) => {
+  let lastCall;
+  return async function actual (...args) {
     const context = this
-    callCount += 1
 
-    // First call, set lastTime
-    if (lastTime == null) {
-      lastTime = Date.now()
+    if (lastCall == null) {
+      lastCall = Date.now()
     }
 
-    clearTimeout(lastFn)
-    if (callCount >= maxCalls) {
-      fn.apply(context, args)
-      callCount = 0
-      lastTime = Date.now()
+    if (batch.length >= maxLen) {
+      await fn.apply(context, args)
     } else {
-      lastFn = setTimeout(() => {
-        if (Date.now() - lastTime >= wait) {
-          fn.apply(context, args)
-          lastTime = Date.now()
-        }
-      }, Math.max(wait - (Date.now() - lastTime), 0))
+      lastCall = Date.now()
+      await new Promise(resolve => {
+        setTimeout(() => {
+          if (Date.now() - lastCall >= wait) {
+            fn.apply(context, args).then(() => {
+              lastCall = Date.now()
+              resolve()
+            })
+          } else {
+            resolve()
+          }
+        }, Math.max(wait - (Date.now() - lastCall), 0))
+      })
     }
   }
 }
@@ -107,18 +107,18 @@ async function handleRequest (request, context) {
   })
 
   context.waitUntil(throttledSendLogs())
+
   return response
 }
 
 export default {
-  fetch (req, _, context) {
+	async fetch(req, _, context) {
     context.passThroughOnException()
 
     if (!workerTimestamp) {
       workerTimestamp = new Date().toISOString()
     }
 
-    context.waitUntil(sendLogs())
     return handleRequest(req, context)
-  }
-}
+	},
+};
