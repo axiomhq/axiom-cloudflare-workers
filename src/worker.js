@@ -2,7 +2,7 @@ const axiomDataset = 'my-dataset' // Your Axiom dataset
 const axiomToken = 'xapt-xxx' // Your Axiom API token
 
 // 8< ----------- snip ------------
-const Version = '0.1.0'
+const Version = '0.2.0'
 const axiomEndpoint = 'https://api.axiom.co'
 let workerTimestamp
 let batch = []
@@ -18,31 +18,21 @@ const generateId = length => {
 
 const WORKER_ID = generateId(6)
 
-const throttle = (fn, wait, maxCalls) => {
-  let lastFn
-  let lastTime
-  let callCount = 0
-  return function actual (...args) {
+const throttle = (fn, wait, maxLen) => {
+  let timeoutInProgress = false
+  return async function actual (...args) {
     const context = this
-    callCount += 1
 
-    // First call, set lastTime
-    if (lastTime == null) {
-      lastTime = Date.now()
-    }
-
-    clearTimeout(lastFn)
-    if (callCount >= maxCalls) {
-      fn.apply(context, args)
-      callCount = 0
-      lastTime = Date.now()
-    } else {
-      lastFn = setTimeout(() => {
-        if (Date.now() - lastTime >= wait) {
-          fn.apply(context, args)
-          lastTime = Date.now()
-        }
-      }, Math.max(wait - (Date.now() - lastTime), 0))
+    if (batch.length >= maxLen) {
+      await fn.apply(context, args)
+    } else if (!timeoutInProgress) {
+      timeoutInProgress = true
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          timeoutInProgress = false
+          fn.apply(context, args).then(resolve).catch(resolve);
+        })
+      }, wait)
     }
   }
 }
@@ -56,6 +46,7 @@ async function sendLogs () {
 
   const url = `${axiomEndpoint}/v1/datasets/${axiomDataset}/ingest`
   return fetch(url, {
+    signal: AbortSignal.timeout(30_000),
     method: 'POST',
     body: logs.map(JSON.stringify).join('\n'),
     keepalive: true,
@@ -67,8 +58,8 @@ async function sendLogs () {
   })
 }
 
-// This will send logs every second or every 1000 logs
-const throttledSendLogs = throttle(sendLogs, 1000, 1000)
+// This will send logs every 10 seconds or every 1000 logs
+const throttledSendLogs = throttle(sendLogs, 10_000, 1000)
 
 async function handleRequest (request, context) {
   const start = Date.now()
@@ -107,18 +98,18 @@ async function handleRequest (request, context) {
   })
 
   context.waitUntil(throttledSendLogs())
+
   return response
 }
 
 export default {
-  fetch (req, _, context) {
+  async fetch (req, _, context) {
     context.passThroughOnException()
 
     if (!workerTimestamp) {
       workerTimestamp = new Date().toISOString()
     }
 
-    context.waitUntil(sendLogs())
     return handleRequest(req, context)
   }
 }
