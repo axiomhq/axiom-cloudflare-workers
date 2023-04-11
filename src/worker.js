@@ -50,6 +50,7 @@ async function sendLogs () {
 
   const url = `${axiomEndpoint}/v1/datasets/${axiomDataset}/ingest`
   return fetch(url, {
+    signal: AbortSignal.timeout(30_000),
     method: 'POST',
     body: logs.map(JSON.stringify).join('\n'),
     keepalive: true,
