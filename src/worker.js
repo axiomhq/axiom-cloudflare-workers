@@ -25,9 +25,7 @@ const throttle = (fn, wait, maxLen) => {
 
     if (batch.length >= maxLen) {
       await fn.apply(context, args)
-    } else if (timeoutInProgress) {
-      return
-    } else {
+    } else if (!timeoutInProgress) {
       timeoutInProgress = true
       await new Promise(resolve => {
         setTimeout(() => {
