@@ -19,30 +19,23 @@ const generateId = length => {
 const WORKER_ID = generateId(6)
 
 const throttle = (fn, wait, maxLen) => {
-  let lastCall
-  let lastTimeoutId
+  let timeoutInProgress = false
   return async function actual (...args) {
     const context = this
 
-    if (lastCall == null) {
-      lastCall = Date.now()
-    }
-
     if (batch.length >= maxLen) {
       await fn.apply(context, args)
+    } else if (timeoutInProgress) {
+      return
     } else {
+      timeoutInProgress = true
       await new Promise(resolve => {
-        clearTimeout(lastTimeoutId)
-        lastTimeoutId = setTimeout(() => {
-          if (Date.now() - lastCall >= wait) {
-            fn.apply(context, args).then(() => {
-              lastCall = Date.now()
-              resolve()
-            })
-          } else {
+        setTimeout(() => {
+          fn.apply(context, args).then(() => {
             resolve()
-          }
-        }, Math.max(wait - (Date.now() - lastCall), 0))
+            timeoutInProgress = false
+          })
+        }, wait)
       })
     }
   }
@@ -68,8 +61,8 @@ async function sendLogs () {
   })
 }
 
-// This will send logs every second or every 1000 logs
-const throttledSendLogs = throttle(sendLogs, 1000, 1000)
+// This will send logs every 10 seconds or every 1000 logs
+const throttledSendLogs = throttle(sendLogs, 10_000, 1000)
 
 async function handleRequest (request, context) {
   const start = Date.now()
