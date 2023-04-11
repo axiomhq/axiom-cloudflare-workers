@@ -22,8 +22,6 @@ and our [community Discord](https://axiom.co/discord).
 
 This worker script can send logs from Cloudflare to Axiom.
 
-:warning: This is still in development and not ready for production use.
-
 ## Quickstart
 
 Copy the contents of `src/worker.js` into a new worker on cloudflare
