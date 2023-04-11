@@ -20,6 +20,7 @@ const WORKER_ID = generateId(6)
 
 const throttle = (fn, wait, maxLen) => {
   let lastCall
+  let lastTimeoutId
   return async function actual (...args) {
     const context = this
 
@@ -30,9 +31,9 @@ const throttle = (fn, wait, maxLen) => {
     if (batch.length >= maxLen) {
       await fn.apply(context, args)
     } else {
-      lastCall = Date.now()
       await new Promise(resolve => {
-        setTimeout(() => {
+        clearTimeout(lastTimeoutId)
+        lastTimeoutId = setTimeout(() => {
           if (Date.now() - lastCall >= wait) {
             fn.apply(context, args).then(() => {
               lastCall = Date.now()
