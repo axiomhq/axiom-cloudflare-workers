@@ -81,13 +81,13 @@ async function handleRequest (request, context) {
     _time: Date.now(),
     request: {
       url: request.url,
-      headers: request.headers,
+      headers: [...request.headers].map(([key, value]) => `${key}: ${value}`),
       method: request.method,
       ...cf
     },
     response: {
       duration,
-      headers: response.headers,
+      headers: [...response.headers].map(([key, value]) => `${key}: ${value}`),
       status: response.status
     },
     worker: {
