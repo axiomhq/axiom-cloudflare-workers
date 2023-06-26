@@ -64,13 +64,13 @@ async function sendLogs () {
 // This will send logs every 10 seconds or every 1000 logs
 const throttledSendLogs = throttle(sendLogs, 10_000, 1000)
 
-function getHeaderMap(headers, whitelist) {
-  if (!whitelist.length) {
+function getHeaderMap(headers, allowlist) {
+  if (!allowlist.length) {
     return {};
   }
 
   return [...headers].reduce((acc, [headerKey, headerValue]) => {
-    if (whitelist.includes(headerKey)) {
+    if (allowlist.includes(headerKey)) {
       acc[headerKey] = headerValue;
     }
 
