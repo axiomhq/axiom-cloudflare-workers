@@ -5,7 +5,7 @@ const requestHeadersToCapture = ['user-agent'];
 const responseHeadersToCapture = ['cf-cache-status', 'cf-ray'];
 
 // 8< ----------- snip ------------
-const Version = '0.2.0'
+const Version = '0.3.0'
 const axiomEndpoint = 'https://api.axiom.co'
 let workerTimestamp
 let batch = []
@@ -51,8 +51,7 @@ async function sendLogs () {
   return fetch(url, {
     signal: AbortSignal.timeout(30_000),
     method: 'POST',
-    body: logs.map(JSON.stringify).join('\n'),
-    keepalive: true,
+    body: logs.map(log => JSON.stringify(log)).join('\n'),
     headers: {
       'Content-Type': 'application/x-ndjson',
       Authorization: `Bearer ${axiomToken}`,
