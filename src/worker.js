@@ -34,8 +34,8 @@ const throttle = (fn, wait, maxLen) => {
         setTimeout(() => {
           timeoutInProgress = false
           fn.apply(context, args).then(resolve).catch(resolve);
-        })
-      }, wait)
+        }, wait)
+      })
     }
   }
 }
