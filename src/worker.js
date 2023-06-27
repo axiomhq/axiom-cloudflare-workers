@@ -1,6 +1,9 @@
 const axiomDataset = 'my-dataset' // Your Axiom dataset
 const axiomToken = 'xapt-xxx' // Your Axiom API token
 
+const requestHeadersToCapture = ['user-agent'];
+const responseHeadersToCapture = ['cf-cache-status', 'cf-ray'];
+
 // 8< ----------- snip ------------
 const Version = '0.2.0'
 const axiomEndpoint = 'https://api.axiom.co'
@@ -61,6 +64,20 @@ async function sendLogs () {
 // This will send logs every 10 seconds or every 1000 logs
 const throttledSendLogs = throttle(sendLogs, 10_000, 1000)
 
+function getHeaderMap(headers, allowlist) {
+  if (!allowlist.length) {
+    return {};
+  }
+
+  return [...headers].reduce((acc, [headerKey, headerValue]) => {
+    if (allowlist.includes(headerKey)) {
+      acc[headerKey] = headerValue;
+    }
+
+    return acc;
+  }, {});
+}
+
 async function handleRequest (request, context) {
   const start = Date.now()
 
@@ -81,13 +98,13 @@ async function handleRequest (request, context) {
     _time: Date.now(),
     request: {
       url: request.url,
-      headers: request.headers,
+      headers: getHeaderMap(request.headers, requestHeadersToCapture),
       method: request.method,
       ...cf
     },
     response: {
       duration,
-      headers: response.headers,
+      headers: getHeaderMap(response.headers, responseHeadersToCapture),
       status: response.status
     },
     worker: {
