@@ -6,7 +6,8 @@
   "author": "Axiom, Inc.",
   "scripts": {
     "format": "eslint '*/**/*.{js,ts}' --quiet --fix",
-    "lint": "eslint '*/**/*.{js,ts}'"
+    "lint": "eslint '*/**/*.{js,ts}'",
+    "build": "npx tsc"
   },
   "contributors": [
     "Islam Schehata <islam@axiom.co>",
@@ -26,13 +27,16 @@
   },
   "homepage": "https://github.com/axiomhq/cloudflare#readme",
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230717.1",
+    "@types/node": "^20.4.4",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
-    "prettier": "^2.8.3"
+    "prettier": "^2.8.3",
+    "typescript": "^5.1.6"
   },
   "engines": {
     "node": ">=14"

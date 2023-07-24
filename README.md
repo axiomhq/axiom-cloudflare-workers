@@ -39,3 +39,7 @@ Add triggers for the worker, e.g a route trigger:
     then click `Save`.
 
 When requests are made to the routes you setup, the worker will be triggered and you will see the logs delivered to your Axiom dataset.
+
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/axiomhq/axiom-cloudflare-workers)
+
+
