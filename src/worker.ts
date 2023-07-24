@@ -31,7 +31,7 @@ const requestHeadersToCapture: string[] = ['user-agent'];
 const responseHeadersToCapture: string[] = ['cf-cache-status', 'cf-ray'];
 
 // 8< ----------- snip ------------
-const Version: string = '0.3.0';
+const Version: string = '0.4.0';
 const axiomEndpoint: string = 'https://api.axiom.co';
 let workerTimestamp: string;
 let batch: any[] = [];

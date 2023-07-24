@@ -24,13 +24,14 @@ This worker script can send logs from Cloudflare to Axiom.
 
 ## Quickstart
 
-Copy the contents of `src/worker.js` into a new worker on cloudflare
+Copy the contents of `src/worker.ts` into a new worker on cloudflare
 
 Update the authentication variables to corresponding dataset and token:
 ```ts
 const axiomDataset = "my-dataset" // Your Axiom dataset
 const axiomToken = "xapt-xxx" // Your Axiom API token
 ```
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/axiomhq/axiom-cloudflare-workers)
 
 Add triggers for the worker, e.g a route trigger:
   - Navigate to the worker and click on the `Triggers` tab.
@@ -40,6 +41,6 @@ Add triggers for the worker, e.g a route trigger:
 
 When requests are made to the routes you setup, the worker will be triggered and you will see the logs delivered to your Axiom dataset.
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/axiomhq/axiom-cloudflare-workers)
+
 
 

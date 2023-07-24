@@ -1,7 +1,5 @@
 name: Deploy Cloudfare worker
 on:
-  push:
-  pull_request:
   repository_dispatch:
 jobs:
   deploy:
