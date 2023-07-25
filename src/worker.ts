@@ -12,6 +12,10 @@ interface CFRequest extends Request {
     [key: string]: any; // Allow other properties with any value
   };
 }
+type ENV = {
+  AXIOM_TOKEN?: string
+  AXIOM_DATASET?: string 
+}
 type Params<P extends string = any> = Record<P, string | string[]>;
 type EventContext<Env, P extends string, Data> = {
   request: Request;
@@ -24,8 +28,6 @@ type EventContext<Env, P extends string, Data> = {
   data: Data;
 };
 
-const axiomDataset: string = process.env.AXIOM_DATASET || 'my-dataset'; // Your Axiom dataset
-const axiomToken: string = process.env.AXIOM_TOKEN || 'xapt-xxx'; // Your Axiom API token
 
 const requestHeadersToCapture: string[] = ['user-agent'];
 const responseHeadersToCapture: string[] = ['cf-cache-status', 'cf-ray'];
@@ -47,46 +49,46 @@ const generateId = (length: number): string => {
 
 const WORKER_ID: string = generateId(6);
 
-const throttle = <T>(fn: Function, wait: number, maxLen: number) => {
+const throttle = <T>(fn: Function, wait: number, maxLen: number, env: ENV) => {
   let timeoutInProgress = false;
   return async function actual(this: T,...args: any[]) {
     const context = this;
     if (batch.length >= maxLen) {
-      await fn.apply(context, args);
+      await fn.apply(context, [env,...args]);
     } else if (!timeoutInProgress) {
       timeoutInProgress = true;
       await new Promise((resolve, reject) => {
         setTimeout(() => {
           timeoutInProgress = false;
-          fn.apply(context, args).then(resolve).catch(resolve);
+          fn.apply(context, [env, ...args]).then(resolve).catch(resolve);
         }, wait);
       });
     }
   };
 };
 
-async function sendLogs() {
+async function sendLogs(env: ENV,  ...args: any[]) {
   if (batch.length === 0) {
     return;
   }
   const logs = batch;
   batch = [];
 
-  const url = `${axiomEndpoint}/v1/datasets/${axiomDataset}/ingest`;
+  const url = `${axiomEndpoint}/v1/datasets/${env.AXIOM_DATASET}/ingest`;
   return fetch(url, {
     signal: AbortSignal.timeout(30_000),
     method: 'POST',
     body: logs.map(log => JSON.stringify(log)).join('\n'),
     headers: {
       'Content-Type': 'application/x-ndjson',
-      Authorization: `Bearer ${axiomToken}`,
+      Authorization: `Bearer ${env.AXIOM_TOKEN}`,
       'User-Agent': 'axiom-cloudflare/' + Version,
     },
   });
 }
 
 // This will send logs every 10 seconds or every 1000 logs
-const throttledSendLogs = throttle(sendLogs, 10_000, 1000);
+const throttledSendLogs = (env: ENV) => throttle(sendLogs, 10_000, 1000, env);
 
 function getHeaderMap(headers: Headers, allowlist: string[]): Record<string, string> {
   if (!allowlist.length) {
@@ -104,6 +106,7 @@ function getHeaderMap(headers: Headers, allowlist: string[]): Record<string, str
 
 async function handleRequest(
   request: CFRequest,
+  env: ENV,
   context: any
 ): Promise<Response> {
   const start = Date.now();
@@ -142,21 +145,37 @@ async function handleRequest(
     },
   });
 
-  context.waitUntil(throttledSendLogs());
+  context.waitUntil(throttledSendLogs(env));
 
   return response;
 }
 
+
+function envValidator(env: ENV){
+  const dataset = env.AXIOM_DATASET?.trim()
+  const token = env.AXIOM_TOKEN?.trim()
+  if (dataset === undefined){
+    throw new Error("DATASET is undefined")
+  }
+  if (token === undefined){
+    throw new Error("TOKEN is undefined")
+  }
+}
+
 export default {
-  async fetch(req: Request, _: any, context: EventContext<any, any, any>): Promise<Response> {
+  async fetch(req: Request, context: EventContext<ENV, any, any>): Promise<Response> {
     context.passThroughOnException();
+    const env = context.env
+    envValidator(env)
 
     if (!workerTimestamp) {
       workerTimestamp = new Date().toISOString();
     }
 
+    
+
     // Cast `req` to `CFRequest` to handle the custom `cf` property
-    return handleRequest(req as CFRequest, context);
+    return handleRequest(req as CFRequest, env, context);
   },
 };
 

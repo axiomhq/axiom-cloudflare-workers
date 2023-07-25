@@ -1,13 +1,15 @@
 {
   "name": "@axiomhq/cloudflare",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "send logs form cloudflare to axiom",
   "main": "src/worker.js",
   "author": "Axiom, Inc.",
   "scripts": {
     "format": "eslint '*/**/*.{js,ts}' --quiet --fix",
     "lint": "eslint '*/**/*.{js,ts}'",
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "deploy": "wrangler deploy src/index.ts",
+    "dev": "wrangler dev src/index.ts --local"
   },
   "contributors": [
     "Islam Schehata <islam@axiom.co>",
@@ -36,7 +38,8 @@
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
     "prettier": "^2.8.3",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "wrangler": "^3.3.0"
   },
   "engines": {
     "node": ">=14"

@@ -1,0 +1,7 @@
+name = "axiomhq/cloudfare-worker" 
+main = "./src/index.ts"
+compatibility_date = "2023-07-25"
+
+[vars]
+AXIOM_TOKEN=""
+AXIOM_DATASET=""

@@ -1,17 +1,16 @@
-{
-    "compilerOptions": {
-        "target": "es2020",
-    "module": "commonjs",
-    "outDir": "dist",
-    "strict": true,
-    "esModuleInterop": true,
-    "allowJs": true,
-    "noEmitOnError": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-    },
-    "include": ["src"],
-    "types": ["@cloudflare/workers-types"]
-
-  }
+  {
+	"compilerOptions": {
+		"noEmit": true,
+		"module": "esnext",
+		"target": "esnext",
+		"lib": ["esnext"],
+		"strict": true,
+		"moduleResolution": "node",
+		"types": ["@cloudflare/workers-types"],
+        "noEmitOnError": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true
+	},
+	"exclude": ["node_modules", "dist", "test"]
+}
   
