@@ -1,6 +1,6 @@
-name = "axiomhq/cloudfare-worker" 
-main = "./src/index.ts"
-compatibility_date = "2023-07-25"
+name = "axiomhq-cloudfare-worker" 
+main = "./src/worker.ts"
+compatibility_date = "2023-07-17"
 
 [vars]
 AXIOM_TOKEN=""

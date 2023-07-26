@@ -8,8 +8,8 @@
     "format": "eslint '*/**/*.{js,ts}' --quiet --fix",
     "lint": "eslint '*/**/*.{js,ts}'",
     "build": "npx tsc",
-    "deploy": "wrangler deploy src/index.ts",
-    "dev": "wrangler dev src/index.ts --local"
+    "deploy": "wrangler deploy ./src/worker.ts",
+    "dev": "wrangler dev ./src/worker.ts --local"
   },
   "contributors": [
     "Islam Schehata <islam@axiom.co>",
@@ -43,5 +43,7 @@
   },
   "engines": {
     "node": ">=14"
+  },
+  "dependencies": {
   }
 }
