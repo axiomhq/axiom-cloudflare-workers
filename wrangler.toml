@@ -2,6 +2,7 @@ name = "axiomhq-cloudfare-worker"
 main = "./src/worker.ts"
 compatibility_date = "2023-07-17"
 
+
 [vars]
-AXIOM_TOKEN=""
-AXIOM_DATASET=""
+AXIOM_TOKEN=  "${{ secrets.AXIOM_TOKEN }}"
+AXIOM_DATASET= "${{ secrets.AXIOM_DATASET }}"
