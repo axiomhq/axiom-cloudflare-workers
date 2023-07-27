@@ -1,0 +1,38 @@
+name: Deploy Worker
+
+on:
+  push:
+  pull_request:
+  repository_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Add a conditional step to check the repository owner
+      - name: Check Repository Owner
+        run: |
+          if [ "${{ github.repository_owner }}" = "axiomhq" ]; then
+            echo "Deployment skipped. Repository owner is axiomhq."
+            exit 0
+          fi
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
+      - run: npm install
+
+      # Set environment variables in the wrangler.toml file
+      - name: Set environment variables
+        run: |
+          echo "AXIOM_TOKEN = '${{ secrets.AXIOM_TOKEN }}'" >> wrangler.toml
+          echo "AXIOM_DATASET = '${{ secrets.AXIOM_DATASET }}'" >> wrangler.toml
+      - name: Build & Deploy Worker
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}

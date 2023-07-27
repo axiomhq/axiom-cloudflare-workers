@@ -1,0 +1,9 @@
+name = "axiomhq-cloudfare-worker" 
+main = "./src/worker.ts"
+compatibility_date = "2023-07-17"
+
+
+[vars]
+# uncomment and add var on clone repo
+# AXIOM_TOKEN=  ""
+# AXIOM_DATASET= ""
