@@ -1,8 +1,10 @@
 name: Deploy Worker
+
 on:
   push:
   pull_request:
   repository_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -24,21 +26,14 @@ jobs:
 
       - run: npm install
 
-      # Write the environment variables to wrangler.toml
-      - name: Write environment variables to wrangler.toml
+      # Set environment variables in the wrangler.toml file
+      - name: Set environment variables
         run: |
-          echo "AXIOM_TOKEN = '${{ secrets.PRODUCTION_AXIOM_TOKEN }}'" >> wrangler.toml
-          echo "AXIOM_DATASET = '${{ secrets.PRODUCTION_AXIOM_DATASET }}'" >> wrangler.toml
+          echo "AXIOM_TOKEN = '$(echo ${{ secrets.AXIOM_TOKEN }})'" >> wrangler.toml
+          echo "AXIOM_DATASET = '$(echo ${{ secrets.AXIOM_DATASET }})'" >> wrangler.toml
 
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          secrets: |
-            AXIOM_TOKEN
-            AXIOM_DATASET
-          env:
-            AXIOM_TOKEN: ${{ secrets.AXIOM_TOKEN }}
-            AXIOM_DATASET: ${{ secrets.AXIOM_DATASET }}  
-
