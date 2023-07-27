@@ -4,5 +4,6 @@ compatibility_date = "2023-07-17"
 
 
 [vars]
-AXIOM_TOKEN=  "${{ secrets.AXIOM_TOKEN }}"
-AXIOM_DATASET= "${{ secrets.AXIOM_DATASET }}"
+# uncomment and add var on clone repo
+# AXIOM_TOKEN=  ""
+# AXIOM_DATASET= ""
