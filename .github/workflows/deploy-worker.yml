@@ -29,9 +29,8 @@ jobs:
       # Set environment variables in the wrangler.toml file
       - name: Set environment variables
         run: |
-          echo "AXIOM_TOKEN = '$(echo ${{ secrets.AXIOM_TOKEN }})'" >> wrangler.toml
-          echo "AXIOM_DATASET = '$(echo ${{ secrets.AXIOM_DATASET }})'" >> wrangler.toml
-
+          echo "AXIOM_TOKEN = '${{ secrets.AXIOM_TOKEN }}'" >> wrangler.toml
+          echo "AXIOM_DATASET = '${{ secrets.AXIOM_DATASET }}'" >> wrangler.toml
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@2.0.0
         with:
