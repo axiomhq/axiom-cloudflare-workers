@@ -24,18 +24,25 @@ This worker script can send logs from Cloudflare to Axiom.
 
 ## Quickstart
 
-Copy the contents of `src/worker.js` into a new worker on cloudflare
+- Create a new Workers application: `npm create cloudflare@latest`
+- Select `"Hello World" Worker`
+- Select `yes` when prompted to use TypeScript
+- Replace the contents of `src/index.ts` with the contents of `src/index.ts` from this repository
+- Copy `src/axiom.ts` from this repository into your project
+- Update the AxiomLogger constructor in `src/index.ts` with your dataset and token:
+- Upload your Axiom token as a [Workers secret](https://developers.cloudflare.com/workers/configuration/secrets/): `npx wrangler secret put AXIOM_TOKEN`
 
-Update the authentication variables to corresponding dataset and token:
-```ts
-const axiomDataset = "my-dataset" // Your Axiom dataset
-const axiomToken = "xapt-xxx" // Your Axiom API token
+Update the dataset in `src/index.ts` with Axiom your dataset name:
+
+```typescript
+const logger = new AxiomLogger({
+  ...
+  dataset: 'my-dataset', // Your axiom dataset
+})
 ```
 
-Add triggers for the worker, e.g a route trigger:
-  - Navigate to the worker and click on the `Triggers` tab.
-  - Scroll down to Routes and click `Add Route`.
-  - Enter a route, e.g `*.example.com` and choose the related zone, 
-    then click `Save`.
+Deploy your worker: `npm run deploy`
+
+Your worker will now be available on a `.workers.dev` domain. To add additional routes, see the [Cloudflare documentation](https://developers.cloudflare.com/workers/configuration/routing/routes/).
 
 When requests are made to the routes you setup, the worker will be triggered and you will see the logs delivered to your Axiom dataset.

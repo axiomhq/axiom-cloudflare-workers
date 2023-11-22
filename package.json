@@ -1,40 +1,16 @@
 {
-  "name": "@axiomhq/cloudflare",
-  "version": "0.1.0",
-  "description": "send logs form cloudflare to axiom",
-  "main": "src/worker.js",
-  "author": "Axiom, Inc.",
+  "name": "workers-axiom-example",
+  "version": "0.3.0",
+  "private": true,
   "scripts": {
-    "format": "eslint '*/**/*.{js,ts}' --quiet --fix",
-    "lint": "eslint '*/**/*.{js,ts}'"
+    "deploy": "wrangler deploy --var VERSION:0.3.0",
+    "deploy-auto-version": "wrangler deploy --var VERSION:$(cat package.json|jq -r '.version')-$(git log -1 --pretty=format:%h)",
+    "dev": "wrangler dev",
+    "start": "wrangler dev"
   },
-  "contributors": [
-    "Islam Schehata <islam@axiom.co>",
-    "Arne Bahlo <arne@axiom.co>"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/axiomhq/cloudflare.git"
-  },
-  "keywords": [
-    "axiom",
-    "cloudflare"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/axiomhq/cloudflare/issues"
-  },
-  "homepage": "https://github.com/axiomhq/cloudflare#readme",
   "devDependencies": {
-    "eslint": "^8.34.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.6.1",
-    "eslint-plugin-promise": "^6.1.1",
-    "prettier": "^2.8.3"
-  },
-  "engines": {
-    "node": ">=14"
+    "@cloudflare/workers-types": "^4.20230419.0",
+    "typescript": "^5.0.4",
+    "wrangler": "^3.0.0"
   }
 }
