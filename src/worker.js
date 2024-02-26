@@ -1,5 +1,6 @@
 const axiomDataset = 'my-dataset' // Your Axiom dataset
 const axiomToken = 'xapt-xxx' // Your Axiom API token
+const logsHttpMinStatusCode = 400 // Filter logs and send only logs with status code above
 
 const requestHeadersToCapture = ['user-agent'];
 const responseHeadersToCapture = ['cf-cache-status', 'cf-ray'];
@@ -23,7 +24,7 @@ const WORKER_ID = generateId(6)
 
 const throttle = (fn, wait, maxLen) => {
   let timeoutInProgress = false
-  return async function actual (...args) {
+  return async function actual(...args) {
     const context = this
 
     if (batch.length >= maxLen) {
@@ -40,7 +41,7 @@ const throttle = (fn, wait, maxLen) => {
   }
 }
 
-async function sendLogs () {
+async function sendLogs() {
   if (batch.length === 0) {
     return
   }
@@ -77,7 +78,7 @@ function getHeaderMap(headers, allowlist) {
   }, {});
 }
 
-async function handleRequest (request, context) {
+async function handleRequest(request, context) {
   const start = Date.now()
 
   const response = await fetch(request)
@@ -92,34 +93,34 @@ async function handleRequest (request, context) {
       }
     })
   }
-
-  batch.push({
-    _time: Date.now(),
-    request: {
-      url: request.url,
-      headers: getHeaderMap(request.headers, requestHeadersToCapture),
-      method: request.method,
-      ...cf
-    },
-    response: {
-      duration,
-      headers: getHeaderMap(response.headers, responseHeadersToCapture),
-      status: response.status
-    },
-    worker: {
-      version: Version,
-      id: WORKER_ID,
-      started: workerTimestamp
-    }
-  })
-
+  if (response.status >= logsHttpMinStatusCode) {
+    batch.push({
+      _time: Date.now(),
+      request: {
+        url: request.url,
+        headers: getHeaderMap(request.headers, requestHeadersToCapture),
+        method: request.method,
+        ...cf
+      },
+      response: {
+        duration,
+        headers: getHeaderMap(response.headers, responseHeadersToCapture),
+        status: response.status
+      },
+      worker: {
+        version: Version,
+        id: WORKER_ID,
+        started: workerTimestamp
+      }
+    })
+  }
   context.waitUntil(throttledSendLogs())
 
   return response
 }
 
 export default {
-  async fetch (req, _, context) {
+  async fetch(req, _, context) {
     context.passThroughOnException()
 
     if (!workerTimestamp) {
