@@ -1,6 +1,6 @@
 const axiomDataset = 'my-dataset' // Your Axiom dataset
 const axiomToken = 'xapt-xxx' // Your Axiom API token
-const logsHttpMinStatusCode = 400 // Filter logs and send only logs with status code above
+const logsHttpMinStatusCode = 100 // Filter logs and send only logs with status code above or equal
 
 const requestHeadersToCapture = ['user-agent'];
 const responseHeadersToCapture = ['cf-cache-status', 'cf-ray'];

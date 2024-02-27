@@ -32,6 +32,11 @@ const axiomDataset = "my-dataset" // Your Axiom dataset
 const axiomToken = "xapt-xxx" // Your Axiom API token
 ```
 
+Update the log filter variable to only send logs with status code above or equal (default to HTTP code 100):
+```ts
+const logsHttpMinStatusCode = 100 // Filter logs and send only logs with status code above or equal
+```
+
 Add triggers for the worker, e.g a route trigger:
   - Navigate to the worker and click on the `Triggers` tab.
   - Scroll down to Routes and click `Add Route`.
